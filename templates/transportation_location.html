@@ -1,0 +1,21 @@
+<!-- transportation_location.html -->
+{% extends 'base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Map and Route to {{ destination.name }} matatu stage</h2>
+    <div id="instructions" class="mt-4"></div>
+    <div id="map" style="height: 500px;" class="mt-4"></div>
+</div>
+
+<!-- Embed lat, lng, and destination in a JSON script element -->
+<script type="application/json" id="location-data">
+    {
+        "destination": "{{ destination.name|escapejs }}",
+        "bus_stops": {{ bus_stops|safe }}
+    }
+</script>
+
+<script src="{% static 'js/main.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,64 @@
+<!-- enter_destination.html -->
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-4">
+    <h2>Enter Destination</h2>
+    <form id="destination-form" class="mt-4">
+        <div class="row">
+            <div class="col-12 col-md-9">
+                <div class="mb-3">
+                    <label for="destination" class="form-label">Destination:</label>
+                    <input type="text" class="form-control" id="destination" name="destination" required>
+                    <div id="suggestions" class="list-group"></div>
+                </div>
+            </div>
+            <div class="col-12 col-md-3 d-grid align-items-end">
+                <button type="submit" class="btn btn-primary mb-3">Find Route</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script>
+    document.getElementById('destination').addEventListener('input', function() {
+        const query = this.value;
+        if (query.length > 2) {
+            fetch(`/search_destinations/?q=${query}`)
+                .then(response => response.json())
+                .then(data => {
+                    const suggestions = document.getElementById('suggestions');
+                    suggestions.innerHTML = '';
+                    data.forEach(destination => {
+                        const item = document.createElement('a');
+                        item.className = 'list-group-item list-group-item-action';
+                        item.textContent = destination.name;
+                        item.addEventListener('click', function() {
+                            document.getElementById('destination').value = destination.name;
+                            suggestions.innerHTML = '';
+                        });
+                        suggestions.appendChild(item);
+                    });
+                });
+        }
+    });
+
+    document.getElementById('destination-form').addEventListener('submit', function(event) {
+        event.preventDefault();
+        const destination = document.getElementById('destination').value;
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(function(position) {
+                const lat = position.coords.latitude;
+                const lng = position.coords.longitude;
+                const queryString = `?lat=${lat}&lng=${lng}&destination=${encodeURIComponent(destination)}`;
+                window.location.href = '/transportation_location/' + queryString;
+            }, function(error) {
+                console.error('Error getting location', error);
+                alert('Error getting your current location. Please try again.');
+            });
+        } else {
+            alert('Geolocation is not supported by your browser.');
+        }
+    });
+</script>
+{% endblock %}

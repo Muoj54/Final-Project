@@ -1,0 +1,60 @@
+<!-- home.html -->
+{% extends "base.html" %}
+
+{% block banner %}
+<div class="banner">
+    <h1>Discover seamless City Travel</h1>
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="container mt-4">
+    <p>Ma3Finder provides reliable public transportation services for your daily commute within and beyond the city. Experience hassle-free journeys!</p>
+</div>
+{% endblock %}
+
+{% block services %}
+<div id="services" class="services mt-5">
+    <div class="container">
+        <h2>Our Services</h2>
+        <div class="row">
+            <div class="col-md-4">
+                <div class="service-item">
+                    <div class="service-box">
+                        <h3>Explore Destinations</h3>
+                        <p>Find all the places you can travel to with our services.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-item">
+                    <div class="service-box">
+                        <h3>Locate Transport</h3>
+                        <p>Find the nearest bus stops and transport options available.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="service-item">
+                    <div class="service-box">
+                        <h3>Map Your Journey</h3>
+                        <p>Plan your route and navigate the city effortlessly!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .service-box {
+        background-color: #e0f2f1; /* Light blue background color */
+        padding: 20px;
+        border-radius: 8px;
+        height: 100%;
+    }
+    .service-item {
+        margin-bottom: 20px; /* Space between service items */
+    }
+</style>
+{% endblock %}
