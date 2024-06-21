@@ -26,3 +26,13 @@ class BusStopDestination(models.Model):
 
     def __str__(self):
         return f"{self.bus_stop.name} -> {self.destination.name}"
+
+
+class DestinationSubmission(models.Model):
+    name = models.CharField(max_length=100)
+    latitude = models.DecimalField(max_digits=9, decimal_places=6)
+    longitude = models.DecimalField(max_digits=9, decimal_places=6)
+    submitted_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return self.name

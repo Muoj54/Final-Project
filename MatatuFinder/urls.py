@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from M3FinderApp.views import HomeView, TransportationLocationView, EnterDestinationView, search_destinations
+from M3FinderApp.views import HomeView, TransportationLocationView, EnterDestinationView, search_destinations, ContactUsView, SuccessView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -24,4 +24,6 @@ urlpatterns = [
     path('enter_destination/', EnterDestinationView.as_view(), name='enter_destination'),
     path('transportation_location/', TransportationLocationView.as_view(), name='transportation_location'),
     path('search_destinations/', search_destinations, name='search_destinations'),
+    path('contact-us/', ContactUsView.as_view(), name='contact_us'),
+    path('success/', SuccessView.as_view(), name='success'),
 ]

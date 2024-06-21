@@ -1,8 +1,10 @@
 import json
-from django.shortcuts import get_object_or_404, render
+from django.shortcuts import get_object_or_404, render, redirect
 from django.views.generic import TemplateView
 from django.http import JsonResponse
-from .models import BusStop, BusStopDestination, Destination
+from .models import BusStop, BusStopDestination, Destination, DestinationSubmission
+from .forms import DestinationSubmissionForm
+
 
 # Create your views here.
 # def home_screen(request):
@@ -53,3 +55,26 @@ def search_destinations(request):
         results = [{'name': destination.name} for destination in destinations]
         return JsonResponse(results, safe=False)
     return JsonResponse([], safe=False)
+
+
+
+class ContactUsView(TemplateView):
+    template_name = 'contact_us.html'
+
+    def get(self, request, *args, **kwargs):
+        form = DestinationSubmissionForm()
+        return self.render_to_response({'form': form})
+
+    def post(self, request, *args, **kwargs):
+        form = DestinationSubmissionForm(request.POST)
+        if form.is_valid():
+            DestinationSubmission.objects.create(
+                name=form.cleaned_data['name'],
+                latitude=form.cleaned_data['latitude'],
+                longitude=form.cleaned_data['longitude']
+            )
+            return redirect('success')
+        return self.render_to_response({'form': form})
+
+class SuccessView(TemplateView):
+    template_name = 'success.html'

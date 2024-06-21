@@ -31,7 +31,7 @@ document.addEventListener('DOMContentLoaded', (event) => {
                         'line-cap': 'round'
                     },
                     paint: {
-                        'line-color': '#3887be',
+                        'line-color': '#7DF9FF',
                         'line-width': 5,
                         'line-opacity': 0.75
                     }
