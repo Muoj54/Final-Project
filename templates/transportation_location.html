@@ -1,11 +1,17 @@
-<!-- transportation_location.html -->
 {% extends 'index.html' %}
 {% load static %}
 
 {% block content %}
 <div class="container mt-4">
     <h2>Map and Route to {{ destination.name }} matatu stage</h2>
-    <div id="instructions" class="mt-4"></div>
+    <div id="instructions" class="mt-4">
+        <p>Estimated travel times:</p>
+        <ul id="travel-times">
+            <li><strong>Walking:</strong> <span id="walking-time">Calculating...</span></li>
+            <li><strong>Cycling:</strong> <span id="cycling-time">Calculating...</span></li>
+            <li><strong>Driving:</strong> <span id="driving-time">Calculating...</span></li>
+        </ul>
+    </div>
     <div id="map" style="height: 500px;" class="mt-4"></div>
 </div>
 

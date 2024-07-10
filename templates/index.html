@@ -1,4 +1,5 @@
 <!-- base.html -->
+<!-- {% load static %} -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -14,9 +15,9 @@
             scroll-behavior: smooth;
         }
         body {
-            background: linear-gradient(-45deg, #edf5fc, #cfe8fa, #a6d3f7, #65acee);
+            background: linear-gradient(-60deg, #e6f2fd, #c4e2f8, #a4d0f5, #92cafd);
             background-size: 400% 400%;
-            animation: gradientBG 15s ease infinite;
+            animation: gradientBG 180s ease infinite;
             height: 100vh;
             margin: 0;
         }
@@ -26,18 +27,36 @@
             100% {background-position: 0% 50%;}
         }
         .banner {
-            background-color: #159af3;
-            color: white;
+            position: relative;
             padding: 20px;
             text-align: center;
             border-bottom: 1px solid #ddd;
             border-radius: 10px;
             box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
             margin-bottom: 20px;
+            overflow: hidden; /* Ensures the pseudo-element does not overflow */
+        }
+        .banner::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: url('/static/images/matatus.jpg') no-repeat center center;
+            background-size: cover;
+            opacity: 0.3; /* Adjust the opacity to make it semi-transparent */
+            z-index: 0;
+        }
+        .banner-content {
+            position: relative;
+            z-index: 1;
+            color: white; /* Ensure the text remains fully visible */
         }
         .services {
-            background: linear-gradient(-45deg, #eff1f1, #d5f5eb, #aef7de, #90f0d8);
+            background: linear-gradient(-45deg, #e6f7f7, hsl(162, 92%, 90%), #b5fde4, #a4f8e3);
             padding: 50px 0;
+            animation: gradientBG 15s ease infinite;
             text-align: center;
         }
         .service-item {
@@ -46,24 +65,40 @@
         #map {
             height: 500px;
         }
+        header {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+        header img {
+            height: 250px; /* Adjust the height as needed */
+            width: auto; /* Ensures the width adjusts proportionally */
+            margin-left: 10px;
+            vertical-align: middle; /* Aligns the image vertically */
+        }
+        header h1 {
+            display: inline-flex; /* Ensures the logo and text are aligned inline */
+            align-items: center; /* Aligns the logo and text vertically */
+        }
     </style>
 </head>
 <body>
     <header>
-        <h1>Welcome to Ma3Finder</h1>
+        <h1><img src="{% static 'images/ma3finder-high-resolution-logo-transparent (3).png' %}"></h1>
     </header>
 
     <nav class="navbar navbar-expand-lg navbar-light bg-light">
         <div class="container-fluid">
-            <a class="navbar-brand" href="/">Ma3Finder</a>
+            <a class="navbar-brand" href="/">Ma3Finder Home</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav">
-                    <li class="nav-item">
+                    <!-- <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="/">Home</a>
-                    </li>
+                    </li> -->
                     <li class="nav-item">
                         <a class="nav-link" href="{% url 'enter_destination' %}">Enter Destination</a>
                     </li>

@@ -71,10 +71,12 @@ class ContactUsView(TemplateView):
             DestinationSubmission.objects.create(
                 name=form.cleaned_data['name'],
                 latitude=form.cleaned_data['latitude'],
-                longitude=form.cleaned_data['longitude']
+                longitude=form.cleaned_data['longitude'],
+                additional_info=form.cleaned_data.get('additional_info'),
+                message=form.cleaned_data.get('message')
             )
             return redirect('success')
         return self.render_to_response({'form': form})
-
+    
 class SuccessView(TemplateView):
     template_name = 'success.html'

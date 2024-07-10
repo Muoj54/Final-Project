@@ -1,52 +1,75 @@
-// static/js/main.js
 document.addEventListener('DOMContentLoaded', (event) => {
-    mapboxgl.accessToken = 'pk.eyJ1IjoibXVvajU0IiwiYSI6ImNseGV0OXFsMjBnNGsyanMzOTMzM2lrYWkifQ.fIyWhoRzZOFBFnkVMW2jxA';
+    mapboxgl.accessToken = 'pk.eyJ1IjoibXVvajU0IiwiYSI6ImNseGV0OXFsMjBnNGsyanMzOTMzM2lrYWkifQ.fIyWhoRzZOFBFnkVMW2jxA'; // Replace with your Mapbox access token
 
     let map, userLat, userLng, selectedBusStop;
 
     function calculateRoute() {
         if (!selectedBusStop || !userLat || !userLng) return;
 
-        const url = `https://api.mapbox.com/directions/v5/mapbox/driving/${userLng},${userLat};${selectedBusStop.longitude},${selectedBusStop.latitude}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
-        
-        fetch(url)
-            .then(response => response.json())
-            .then(data => {
-                const route = data.routes[0].geometry;
-                const routeCoordinates = route.coordinates;
+        // Fetch route for driving mode
+        const drivingUrl = `https://api.mapbox.com/directions/v5/mapbox/driving/${userLng},${userLat};${selectedBusStop.longitude},${selectedBusStop.latitude}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
 
-                const routeLayer = {
-                    id: 'route',
-                    type: 'line',
-                    source: {
-                        type: 'geojson',
-                        data: {
-                            type: 'Feature',
-                            properties: {},
-                            geometry: route
+        // Fetch route for walking mode
+        const walkingUrl = `https://api.mapbox.com/directions/v5/mapbox/walking/${userLng},${userLat};${selectedBusStop.longitude},${selectedBusStop.latitude}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
+
+        // Fetch route for cycling mode
+        const cyclingUrl = `https://api.mapbox.com/directions/v5/mapbox/cycling/${userLng},${userLat};${selectedBusStop.longitude},${selectedBusStop.latitude}?geometries=geojson&access_token=${mapboxgl.accessToken}`;
+
+        // Function to fetch route and update UI with travel times
+        function fetchRouteAndDisplay(url, mode) {
+            fetch(url)
+                .then(response => response.json())
+                .then(data => {
+                    const route = data.routes[0].geometry;
+                    const routeLayer = {
+                        id: 'route',
+                        type: 'line',
+                        source: {
+                            type: 'geojson',
+                            data: {
+                                type: 'Feature',
+                                properties: {},
+                                geometry: route
+                            }
+                        },
+                        layout: {
+                            'line-join': 'round',
+                            'line-cap': 'round'
+                        },
+                        paint: {
+                            'line-color': '#7DF9FF',
+                            'line-width': 5,
+                            'line-opacity': 0.75
                         }
-                    },
-                    layout: {
-                        'line-join': 'round',
-                        'line-cap': 'round'
-                    },
-                    paint: {
-                        'line-color': '#7DF9FF',
-                        'line-width': 5,
-                        'line-opacity': 0.75
+                    };
+
+                    if (map.getLayer('route')) {
+                        map.getSource('route').setData(routeLayer.source.data);
+                    } else {
+                        map.addLayer(routeLayer);
                     }
-                };
 
-                if (map.getLayer('route')) {
-                    map.getSource('route').setData(routeLayer.source.data);
-                } else {
-                    map.addLayer(routeLayer);
-                }
+                    const travelTime = data.routes[0].duration / 60; // Convert seconds to minutes
 
-                const instructions = data.routes[0].legs[0].steps.map(step => step.maneuver.instruction);
-                document.getElementById('instructions').innerHTML = `<ol>${instructions.map(i => `<li>${i}</li>`).join('')}</ol>`;
-            })
-            .catch(error => console.error('Error fetching route data:', error));
+                    // Update UI with travel time based on mode
+                    if (mode === 'walking') {
+                        document.getElementById('walking-time').textContent = travelTime.toFixed(1) + ' mins';
+                    } else if (mode === 'cycling') {
+                        document.getElementById('cycling-time').textContent = travelTime.toFixed(1) + ' mins';
+                    } else if (mode === 'driving') {
+                        document.getElementById('driving-time').textContent = travelTime.toFixed(1) + ' mins';
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching route data:', error);
+                    // Handle error if needed
+                });
+        }
+
+        // Fetch routes and display travel times for each mode
+        fetchRouteAndDisplay(drivingUrl, 'driving');
+        fetchRouteAndDisplay(walkingUrl, 'walking');
+        fetchRouteAndDisplay(cyclingUrl, 'cycling');
     }
 
     try {
@@ -78,6 +101,10 @@ document.addEventListener('DOMContentLoaded', (event) => {
 
                         marker.getElement().addEventListener('click', () => {
                             selectedBusStop = stop;
+                            // Show "Calculating..." message before fetching route
+                            document.getElementById('walking-time').textContent = 'Calculating...';
+                            document.getElementById('cycling-time').textContent = 'Calculating...';
+                            document.getElementById('driving-time').textContent = 'Calculating...';
                             calculateRoute();
                         });
                     });
